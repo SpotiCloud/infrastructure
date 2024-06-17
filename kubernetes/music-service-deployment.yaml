@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: music-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: music-service
+  template:
+    metadata:
+      labels:
+        name: music-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "80"
+    spec:
+      containers:
+      - name: music-service
+        image: spoticloud.azurecr.io/backend/music-service:latest
+        envFrom:
+        - secretRef:
+            name: music-service-secrets
+        ports:
+        - containerPort: 80
+      restartPolicy: Always

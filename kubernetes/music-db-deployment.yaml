@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: music-db
+  name: music-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: music-db
+  template:
+    metadata:
+      labels:
+        app: music-db
+    spec:
+      containers:
+        - name: music-db
+          image: postgres:latest
+          envFrom:
+          - secretRef:
+              name: postgres-secrets
+          livenessProbe:
+            exec:
+              command:
+              - pg_isready --dbname=music
+            failureThreshold: 6
+            periodSeconds: 5
+            timeoutSeconds: 5
+          ports:
+          - containerPort: 5432
+            hostPort: 5432
+            protocol: TCP
+      restartPolicy: Always

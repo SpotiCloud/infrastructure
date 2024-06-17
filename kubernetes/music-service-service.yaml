@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: music-service
+  namespace: ingress-nginx
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /metrics
+    prometheus.io/port: "5176"
+spec:
+  ports:
+    - protocol: TCP
+      port: 5176
+      targetPort: 80
+  selector:
+    name: music-service

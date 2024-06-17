@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: session-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: session-service
+  template:
+    metadata:
+      labels:
+        name: session-service
+    spec:
+      containers:
+      - name: session-service
+        image: spoticloud.azurecr.io/backend/session-service
+        envFrom:
+        - secretRef:
+            name: session-service-secrets
+        ports:
+        - containerPort: 80
+      restartPolicy: Always
